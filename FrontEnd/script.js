@@ -17,7 +17,6 @@ async function chargerOeuvres() {
     })
 
     /*** Je récupère les catégories des oeuvre et fait une liste sans doublons */
-    const categories = oeuvres.map(oeuvre => oeuvre.category);
     const categoriesUnique = [...new Set(oeuvres.map(oeuvre => JSON.stringify(oeuvre.category)))].map(cat =>JSON.parse(cat));
 
     /*** je fait une boucle pour créer mes boutons de categories */
@@ -83,6 +82,3 @@ async function chargerOeuvres() {
 
 /*** Je charges mes éléments dynamiques sur ma page html */
 chargerOeuvres();
-
-
-
