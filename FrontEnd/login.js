@@ -21,9 +21,8 @@ async function login() {
 
 
         if (reponse.ok) {
-            window.localStorage.setItem("token", logOk.token);
-             window.location.href = "index.html";
-
+            window.localStorage.setItem("tokenUser", logOk.token);
+            window.location.href = "index.html"
         }
         else {
             alert("Identifiant incorrect");

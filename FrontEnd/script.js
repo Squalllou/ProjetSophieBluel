@@ -39,7 +39,6 @@ async function chargerOeuvres() {
         
     });
 
-
     oeuvres.forEach(oeuvre => {
         console.log(oeuvre.title);
 
@@ -80,5 +79,28 @@ async function chargerOeuvres() {
 
 }
 
+/*** fonction pour logout */
+async function logout() {
+    localStorage.removeItem("tokenUser");
+    window.location.reload();
+}
+
+/*** fonction d'ecoute pour savoir si j'ai login ou logout */
+async function ecouteToken() {
+    const token = localStorage.getItem("tokenUser");
+    const loginLink = document.querySelector("#login-link");
+    if (token) {
+        loginLink.innerText = "logout";
+        loginLink.setAttribute("href", "#");
+        loginLink.onclick = logout;
+    }
+    else {
+        loginLink.innerText = "login";
+        loginLink.setAttribute("href", "/login.html") ;
+    }
+    
+}
+
+ecouteToken();
 /*** Je charges mes éléments dynamiques sur ma page html */
 chargerOeuvres();

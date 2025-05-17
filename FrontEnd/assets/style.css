@@ -419,3 +419,7 @@ footer a {
 	text-decoration: none;
 	font-size: 14px;
 }
+
+nav a.active {
+	font-weight: bold;
+}
