@@ -51,14 +51,14 @@ async function galleryModal() {
         imageOeuvre.alt = oeuvre.title;
 
         const titreOeuvre = document.createElement("figcaption");
-        titreOeuvre.innerText = oeuvre.title;
+        
 
         oeuvreElement.classList.add("category-" + oeuvre.category.id);
 
         sectionGallery.appendChild(oeuvreElement);
 
         oeuvreElement.appendChild(imageOeuvre);
-        oeuvreElement.appendChild(titreOeuvre);
+        
     });
 }
 
