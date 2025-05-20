@@ -80,13 +80,13 @@ async function chargerOeuvres() {
 }
 
 /*** fonction pour logout */
-async function logout() {
+function logout() {
     localStorage.removeItem("tokenUser");
     window.location.reload();
 }
 
 /*** fonction d'ecoute pour savoir si j'ai login ou logout */
-async function ecouteToken() {
+function ecouteToken() {
     const token = localStorage.getItem("tokenUser");
     const loginLink = document.querySelector("#login-link");
     if (token) {

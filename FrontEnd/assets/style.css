@@ -192,9 +192,10 @@ nav li {
 /* ajout de nav a */
 nav a {
 	text-decoration: none;
-	color: #000000 ;
+	color: #000000;
 	text-transform: none;
 }
+
 /* code de base => li:hover*/
 nav a:hover {
 	color: #B1663C;
@@ -411,7 +412,7 @@ footer {
 	width: 100%;
 	justify-content: flex-end;
 	margin-top: auto;
-	background-color:  white;
+	background-color: white;
 }
 
 footer a {
@@ -422,4 +423,26 @@ footer a {
 
 nav a.active {
 	font-weight: bold;
+}
+
+/*** Modal***/
+
+.modal {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-wrapper {
+	width: 50%;
+	background-color: #FFF;
+	padding: 20px;
+	max-width: calc(100vw - 20px);
+	max-height: calc(100vw - 20px);
 }
