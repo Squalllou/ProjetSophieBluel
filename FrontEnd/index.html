@@ -49,7 +49,7 @@
 				<div class="modal-wrapper js-modal-stop">
 					<div class="modal-galerie">
 						<div class="boutton-modal-fermer">
-							<button class="js-close-modal">
+							<button type="button" class="js-close-modal" id="btn1">
 								<span class="text">Fermer la modale</span>
 								<span class="icone"><i class="fa-solid fa-xmark"></i></span>
 							</button>
@@ -60,16 +60,16 @@
 						<button class="ajout-photo">Ajouter une photo</button>
 					</div>
 					<div class="modal-formulaire">
-						<form>
+						<form id="form-ajout-oeuvre">
 							<div class="entete-ajout-photo">
 								<div class="bouton-retour">
-									<button class="js-return-modal">
+									<button type="button" class="js-return-modal">
 										<span class="text">Retour</span>
 										<span class="icone"><i class="fa-solid fa-arrow-left"></i></span>
 									</button>
 								</div>
 								<div class="boutton-modal-fermer">
-									<button class="js-close-modal">
+									<button type="button" class="js-close-modal" id="btn2">
 										<span class="text">Fermer la modale</span>
 										<span class="icone"><i class="fa-solid fa-xmark"></i></span>
 									</button>
@@ -79,18 +79,20 @@
 								<label for="image-upload" class="upload-label">
 									+ Ajouter une image
 								</label>
-								<input type="file" id="image-upload" name="image" accept="image/*"
+								<input type="file" id="image-upload" name="image" accept="image/jpeg, image/png"
 									style="display: none;">
 								<img id="image-preview" style="display: none;" />
 							</div>
 							<div class="form-titre-categorie">
 								<div class="form-column">
 									<label for="titre">Titre</label>
-									<input type="titre" name="titre" id="titre">
+									<input type="text" name="title" id="titre">
 								</div>
 								<div class="form-column">
-									<label for="categorie">Catégorie</label>
-									<input type="categorie" name="categorie" id="categorie">
+									<label for="category">Catégorie</label>
+									<select name="category" id="category">
+										<option value=""></option>
+									</select>
 								</div>
 							</div>
 							<button type="submit">Valider</button>
