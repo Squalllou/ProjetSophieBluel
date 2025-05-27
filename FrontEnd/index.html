@@ -43,21 +43,28 @@
 			</article>
 		</section>
 		<section id="portfolio">
-			<h2>Mes Projets</h2>
-			<a href="#modal1" class="js-modal">modifier</a>
+			<div id="titre-modale">
+				<h2>Mes Projets</h2>
+				<a href="#modal1" class="js-modal" id="icone-modale">
+					<i class="fa-solid fa-pen-to-square"></i>
+					modifier
+				</a>
+			</div>
 			<aside id="modal1" class="modal" aria-hidden="true" style="display: none;">
 				<div class="modal-wrapper js-modal-stop">
 					<div class="modal-galerie">
-						<div class="boutton-modal-fermer">
+						<div id="button-close-1">
 							<button type="button" class="js-close-modal" id="btn1">
 								<span class="text">Fermer la modale</span>
 								<span class="icone"><i class="fa-solid fa-xmark"></i></span>
 							</button>
 						</div>
+						<div class="gallery-wrapper">
 						<h3>Galerie photo</h3>
 						<div class="gallery-container"></div>
 						<div class="split-modal"></div>
 						<button class="ajout-photo">Ajouter une photo</button>
+						</div>
 					</div>
 					<div class="modal-formulaire">
 						<form id="form-ajout-oeuvre">
@@ -68,34 +75,40 @@
 										<span class="icone"><i class="fa-solid fa-arrow-left"></i></span>
 									</button>
 								</div>
-								<div class="boutton-modal-fermer">
+								<div id="button-close-2">
 									<button type="button" class="js-close-modal" id="btn2">
 										<span class="text">Fermer la modale</span>
 										<span class="icone"><i class="fa-solid fa-xmark"></i></span>
 									</button>
 								</div>
 							</div>
-							<div class="upload-container">
-								<label for="image-upload" class="upload-label">
-									+ Ajouter une image
-								</label>
-								<input type="file" id="image-upload" name="image" accept="image/jpeg, image/png"
-									style="display: none;">
-								<img id="image-preview" style="display: none;" />
-							</div>
-							<div class="form-titre-categorie">
-								<div class="form-column">
-									<label for="titre">Titre</label>
-									<input type="text" name="title" id="titre">
+							<h3>Ajout photo</h3>
+							<div id="form-container">
+								<div class="upload-container">
+									<i class="fa-regular fa-image"></i>
+									<label for="image-upload" class="upload-label">
+										+ Ajouter photo
+									</label>
+									<input type="file" id="image-upload" name="image" accept="image/jpeg, image/png"
+										style="display: none;">
+									<img id="image-preview" style="display: none;" >
+									<p>jpg, png : 4mo max</p>
 								</div>
-								<div class="form-column">
-									<label for="category">Catégorie</label>
-									<select name="category" id="category">
-										<option value=""></option>
-									</select>
+								<div class="form-titre-categorie">
+									<div class="form-column">
+										<label for="titre">Titre</label>
+										<input type="text" name="title" id="titre">
+									</div>
+									<div class="form-column">
+										<label for="category">Catégorie</label>
+										<select name="category" id="category">
+											<option value=""></option>
+										</select>
+									</div>
 								</div>
 							</div>
-							<button type="submit">Valider</button>
+							<div class="split-modal"></div>
+							<button type="submit" disabled class="bouton-valider">Valider</button>
 						</form>
 					</div>
 				</div>
@@ -127,8 +140,8 @@
 			</ul>
 		</nav>
 	</footer>
-	<script src="script.js"></script>
-	<script src="app.js"></script>
+	<script type="module" src="script.js"></script>
+	<script type="module" src="app.js"></script>
 </body>
 
 </html>

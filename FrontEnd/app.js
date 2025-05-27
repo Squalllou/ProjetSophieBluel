@@ -1,3 +1,5 @@
+import { chargerOeuvres } from "./script.js";
+
 let modal = null; //par défaut modal fermé
 
 /********* fonction afficher modal ************/
@@ -5,7 +7,11 @@ let modal = null; //par défaut modal fermé
 const openModal = function (e) {
     e.preventDefault();
 
-    modal = document.querySelector(e.target.getAttribute("href"));
+    document.querySelector(".modal-galerie").style.display = "flex";
+    document.querySelector(".modal-formulaire").style.display = "none";
+
+
+    modal = document.querySelector(e.currentTarget.getAttribute("href"));
     modal.style.display = null;
     modal.removeAttribute("aria-hidden");
     modal.setAttribute("aria-modal", "true");
@@ -18,6 +24,7 @@ const openModal = function (e) {
     switchGalerieFormulaire();
     loadCategories();
     setupFormListener();
+    resetFormAndPreview(modal);
 }
 
 /********* fonction fermer modal ************/
@@ -103,6 +110,8 @@ async function galleryModal() {
             if (suppressionOk) {
                 const figureASupprimer = e.target.closest("figure");
                 figureASupprimer.remove();
+                await galleryModal();
+                await chargerOeuvres();
             }
             else {
                 bouton.disabled = false; // si echec permet de reéssayer de supprimer
@@ -146,17 +155,79 @@ function switchGalerieFormulaire() {
 /********* fonction ecoute du formulaire d'envoie  ************/
 
 function setupFormListener() {
+    const icon = modal.querySelector(".upload-container .fa-image");
+    const validTypes = ["image/jpeg", "image/png"];
     const form = document.getElementById("form-ajout-oeuvre");
     if (!form || form.dataset.listener === "true") return; // pour etre sur d'avoir le formulaire et verifier si il y a deja un listener
 
     form.dataset.listener = "true";
+
+    const imageInput = form.querySelector('input[type="file"]');
+    const previewImage = document.getElementById("image-preview");
+    const titleInput = form.querySelector('input[name="title"]');
+    const categorySelect = form.querySelector('select[name="category"]');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    //  fonction qui vérifie si tous les champs sont remplis et active ou désactive le bouton pour envoyer
+    function checkFormValidity() {
+        const title = titleInput.value.trim();   // Trim pour éviter espaces vides
+        const category = categorySelect.value;
+        const imageFile = imageInput.files[0];
+
+        // Si TOUT est rempli, bouton activé, sinon désactivé
+        submitButton.disabled = !(title && category && imageFile);
+    }
+
+    // on vérifie la validité du formulaire a chaque modification
+    titleInput.addEventListener("input", checkFormValidity);
+    categorySelect.addEventListener("change", checkFormValidity);
+
+    imageInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (!file) {
+            previewImage.style.display = "none";
+            previewImage.src = "";
+            icon.classList.remove("hidden");
+            checkFormValidity();
+            return;
+        }
+
+        if (!validTypes.includes(file.type)) {
+            alert("Format d'umage non suporté.(jpg ou png)");
+            imageInput.value = "";
+            previewImage.style.display = "none";
+            icon.classList.remove("hidden");
+            checkFormValidity();
+            return;
+        }
+
+        const reader = new FileReader();        // creation de l'url de la miniature
+
+        const label = modal.querySelector('.upload-label');
+        const p = modal.querySelector('.upload-container p');
+
+
+        reader.onload = function (e) {          // ajout de la miniature
+            previewImage.src = e.target.result;
+            previewImage.style.display = "block";
+            icon.classList.add("hidden");
+
+            if (label) label.style.display = "none";
+            if (p) p.style.display = "none";
+
+            checkFormValidity();
+        }
+
+        reader.readAsDataURL(file);
+    });
+
+    checkFormValidity();
 
     form.addEventListener("submit", async function (event) {
         event.preventDefault()
 
         const title = form.querySelector('input[name="title"]').value.trim(); //trim pour eviter les espace avant ou apres le titre
         const category = form.querySelector('select[name="category"]').value;
-        const imageInput = form.querySelector('input[type="file"]');
         const imageFile = imageInput.files[0];
 
         /*** pour cibler ce qu'il manque mais possible de simplifier si pas nécessaire */
@@ -176,7 +247,7 @@ function setupFormListener() {
         }
 
         /*** Formats autorisés */
-        const validTypes = ["image/jpeg", "image/png"];
+
         if (!validTypes.includes(imageFile.type)) {
             alert("Format d'image non supporté. Utilisez uniquement JPG ou PNG.");
             return;
@@ -194,8 +265,11 @@ function setupFormListener() {
         try {
             const result = await postOeuvre(formData);
             form.reset(); //reset du formulaire apres réussite
+            resetFormAndPreview(modal);
             alert("ajout de l'oeuvre avec succès !")
             await galleryModal();
+            await chargerOeuvres();
+            checkFormValidity();
         }
         catch (error) {
             alert("Erreur lors de l'ajout de l'oeuvre");
@@ -215,7 +289,6 @@ async function loadCategories() {
 
         const optionDefault = document.createElement("option"); //le tiret etant afficher par défaut
         optionDefault.value = "";
-        optionDefault.textContent = "-";
         select.appendChild(optionDefault);
 
         categories.forEach(categorie => {
@@ -276,6 +349,21 @@ async function deletOeuvre(dataID) {
         alert("Erreur réseu ou serveur, impossible de supprimer.");
         return false;
     }
+}
+
+/********* fonction reset form et preview  ************/
+function resetFormAndPreview(modal) {
+    const form = modal.querySelector("#form-ajout-oeuvre");
+    const previewImage = modal.querySelector("#image-preview");
+    const icon = modal.querySelector(".upload-container .fa-image");
+    const label = modal.querySelector(".upload-label");
+    const p = modal.querySelector(".upload-container p");
+
+    if (form) form.reset();
+    if (previewImage) previewImage.style.display = "none";
+    if (icon) icon.classList.remove("hidden");
+    if (label) label.style.display = "flex";   
+    if (p) p.style.display = "block";           
 }
 
 /********* ecoute du click sur la modale  ************/

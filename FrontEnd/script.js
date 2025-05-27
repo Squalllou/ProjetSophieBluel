@@ -1,9 +1,15 @@
-async function chargerOeuvres() {
+export async function chargerOeuvres() {
     const reponse = await fetch("http://localhost:5678/api/works");
     const oeuvres = await reponse.json();
 
-    /***Je creer le bouton pour afficher toutes les oeuvres */
+
+    const sectionGallery = document.querySelector(".gallery");
+    sectionGallery.innerHTML = '';  // Vide la galerie
+
     const sectionFiltre = document.querySelector(".filtres");
+    sectionFiltre.innerHTML = '';  // Vide les boutons filtres
+
+    /***Je creer le bouton pour afficher toutes les oeuvres */
     const boutonTous = document.createElement("button");
     boutonTous.innerText = "Tous";
     boutonTous.setAttribute("id", "boutonTous");
@@ -17,7 +23,7 @@ async function chargerOeuvres() {
     })
 
     /*** Je récupère les catégories des oeuvre et fait une liste sans doublons */
-    const categoriesUnique = [...new Set(oeuvres.map(oeuvre => JSON.stringify(oeuvre.category)))].map(cat =>JSON.parse(cat));
+    const categoriesUnique = [...new Set(oeuvres.map(oeuvre => JSON.stringify(oeuvre.category)))].map(cat => JSON.parse(cat));
 
     /*** je fait une boucle pour créer mes boutons de categories */
     categoriesUnique.forEach(categori => {
@@ -34,9 +40,9 @@ async function chargerOeuvres() {
 
             const categoriIdCliquee = event.target.getAttribute("data-category-id");
             filtrerOeuvres(categoriIdCliquee);
-            
+
         });
-        
+
     });
 
     oeuvres.forEach(oeuvre => {
@@ -96,9 +102,9 @@ function ecouteToken() {
     }
     else {
         loginLink.innerText = "login";
-        loginLink.setAttribute("href", "/login.html") ;
+        loginLink.setAttribute("href", "/login.html");
     }
-    
+
 }
 
 ecouteToken();
