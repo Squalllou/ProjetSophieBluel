@@ -1,3 +1,4 @@
+id
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -43,42 +44,40 @@
 			</article>
 		</section>
 		<section id="portfolio">
-			<div id="titre-modale">
+			<div id="modal-title">
 				<h2>Mes Projets</h2>
-				<a href="#modal1" class="js-modal" id="icone-modale">
+				<a href="#modal1" class="js-modal" id="modal-icon">
 					<i class="fa-solid fa-pen-to-square"></i>
 					modifier
 				</a>
 			</div>
 			<aside id="modal1" class="modal" aria-hidden="true" style="display: none;">
 				<div class="modal-wrapper js-modal-stop">
-					<div class="modal-galerie">
+					<div class="modal-gallery">
 						<div id="button-close-1">
 							<button type="button" class="js-close-modal" id="btn1">
 								<span class="text">Fermer la modale</span>
-								<span class="icone"><i class="fa-solid fa-xmark"></i></span>
+								<span class="icon"><i class="fa-solid fa-xmark"></i></span>
 							</button>
 						</div>
 						<div class="gallery-wrapper">
-						<h3>Galerie photo</h3>
-						<div class="gallery-container"></div>
-						<div class="split-modal"></div>
-						<button class="ajout-photo">Ajouter une photo</button>
+							<h3>Galerie photo</h3>
+							<div class="gallery-container"></div>
+							<div class="split-modal"></div>
+							<button class="add-photo">Ajouter une photo</button>
 						</div>
 					</div>
-					<div class="modal-formulaire">
-						<form id="form-ajout-oeuvre">
-							<div class="entete-ajout-photo">
-								<div class="bouton-retour">
-									<button type="button" class="js-return-modal">
-										<span class="text">Retour</span>
-										<span class="icone"><i class="fa-solid fa-arrow-left"></i></span>
-									</button>
-								</div>
+					<div class="modal-form">
+						<form id="form-add-works">
+							<div class="heading-add-photo">
+								<button type="button" class="js-return-modal">
+									<span class="text">Retour</span>
+									<span class="icon"><i class="fa-solid fa-arrow-left"></i></span>
+								</button>
 								<div id="button-close-2">
 									<button type="button" class="js-close-modal" id="btn2">
 										<span class="text">Fermer la modale</span>
-										<span class="icone"><i class="fa-solid fa-xmark"></i></span>
+										<span class="icon"><i class="fa-solid fa-xmark"></i></span>
 									</button>
 								</div>
 							</div>
@@ -91,13 +90,13 @@
 									</label>
 									<input type="file" id="image-upload" name="image" accept="image/jpeg, image/png"
 										style="display: none;">
-									<img id="image-preview" style="display: none;" >
+									<img id="image-preview" style="display: none;">
 									<p>jpg, png : 4mo max</p>
 								</div>
-								<div class="form-titre-categorie">
+								<div class="form-title-category">
 									<div class="form-column">
-										<label for="titre">Titre</label>
-										<input type="text" name="title" id="titre">
+										<label for="title">Titre</label>
+										<input type="text" name="title" id="title">
 									</div>
 									<div class="form-column">
 										<label for="category">Catégorie</label>
@@ -108,12 +107,12 @@
 								</div>
 							</div>
 							<div class="split-modal"></div>
-							<button type="submit" disabled class="bouton-valider">Valider</button>
+							<button type="submit" disabled class="button-check">Valider</button>
 						</form>
 					</div>
 				</div>
 			</aside>
-			<div class="filtres">
+			<div class="filters">
 			</div>
 			<div class="gallery">
 			</div>

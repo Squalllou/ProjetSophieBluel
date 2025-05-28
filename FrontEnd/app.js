@@ -1,29 +1,31 @@
-import { chargerOeuvres } from "./script.js";
+import { loadWorks } from "./script.js"; //pour pouvoir recharger les oeuvre du DOM sans rafraichir la page
 
 let modal = null; //par défaut modal fermé
 
 /********* fonction afficher modal ************/
 
 const openModal = function (e) {
-    e.preventDefault();
+    e.preventDefault(); // on evite tout comportement par defaut
 
-    document.querySelector(".modal-galerie").style.display = "flex";
-    document.querySelector(".modal-formulaire").style.display = "none";
+    /*** j'indique a quel endroit ajouter ma modal dans le DOM et masque la deuxieme vue => le formulaire d'ajout de photo */
+    document.querySelector(".modal-gallery").style.display = "flex";
+    document.querySelector(".modal-form").style.display = "none";
 
-
+    /*** parametrage de la modale et indication de l'endroit du DOM pour l'afficher */
     modal = document.querySelector(e.currentTarget.getAttribute("href"));
     modal.style.display = null;
     modal.removeAttribute("aria-hidden");
     modal.setAttribute("aria-modal", "true");
-    modal.addEventListener('click', closeModal);
-    modal.querySelectorAll('.js-close-modal').forEach(button => {
+    modal.addEventListener('click', closeModal);  // gestion de la fermeture de la modale au clic en dehors de la zone 
+    modal.querySelectorAll('.js-close-modal').forEach(button => { // idem mais quand on clic sur le bouton de fermeture
         button.addEventListener('click', closeModal);
     });
-    modal.querySelector('.js-modal-stop').addEventListener('click', stopPropagation);
-    galleryModal();
-    switchGalerieFormulaire();
+    modal.querySelector('.js-modal-stop').addEventListener('click', stopPropagation); // evite la propagation du clic
+    /*** fonction de la modale */
+    loadModalGallery();
+    toggleModalView();
     loadCategories();
-    setupFormListener();
+    initializeAddWorkForm();
     resetFormAndPreview(modal);
 }
 
@@ -35,11 +37,11 @@ const closeModal = function (e) {
     }
     e.preventDefault();
 
-    const galerie = modal.querySelector(".modal-galerie");
-    const formulaire = modal.querySelector(".modal-formulaire");
-    if (galerie && formulaire) {
-        galerie.style.display = "flex";
-        formulaire.style.display = "none";
+    const gallery = modal.querySelector(".modal-gallery");
+    const formModal = modal.querySelector(".modal-form");
+    if (gallery && formModal) {
+        gallery.style.display = "flex";
+        formModal.style.display = "none";
     }
 
     modal.style.display = "none";
@@ -50,9 +52,9 @@ const closeModal = function (e) {
         button.removeEventListener('click', closeModal);
     });
     modal.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation);
-    const form = modal.querySelector('#form-ajout-oeuvre');
-    if (form) {
-        form.reset();
+    const formAddWorks = modal.querySelector('#form-add-works');  // pour remettre a 0 le formulaire
+    if (formAddWorks) {
+        formAddWorks.reset();
     }
     modal = null;
 }
@@ -65,99 +67,99 @@ const stopPropagation = function (e) {
 
 /********* fonction pour charger les oeuvre/bouton supprimer de la modale ************/
 
-async function galleryModal() {
+async function loadModalGallery() {
 
     /*** recuperation des oeuvre en json */
-    const reponse = await fetch("http://localhost:5678/api/works");
-    const oeuvres = await reponse.json();
+    const response = await fetch("http://localhost:5678/api/works");
+    const works = await response.json();
 
     /*** creation de la modale et affichage de la gallery d'oeuvre miniature */
     const sectionGallery = document.querySelector("#modal1 .gallery-container");
     sectionGallery.innerHTML = '';
 
-    oeuvres.forEach(oeuvre => {
+    works.forEach(work => {
 
-        const oeuvreElement = document.createElement("figure");
+        const workElement = document.createElement("figure");
 
-        const imageOeuvre = document.createElement("img");
-        imageOeuvre.src = oeuvre.imageUrl;
-        imageOeuvre.alt = oeuvre.title;
+        const imageWork = document.createElement("img");
+        imageWork.src = work.imageUrl;
+        imageWork.alt = work.title;
 
         const i = document.createElement("i");
 
-        const boutonSupprimer = document.createElement("button");
-        boutonSupprimer.classList.add("btn-supprimer");
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add("btn-delete");
 
         i.classList.add("fa-solid", "fa-trash-can");
 
-        boutonSupprimer.appendChild(i);
+        deleteButton.appendChild(i);
 
         /*** ajout de l'id de l'oeuvre au bouton de suppression sur la figure ou il est */
-        boutonSupprimer.dataset.id = oeuvre.id;
+        deleteButton.dataset.id = work.id;
         /*** ajout du listener pour supprimer l'oeuvre */
-        boutonSupprimer.addEventListener("click", async (e) => {
+        deleteButton.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
 
             const bouton = e.target.closest("button");
 
-            bouton.disabled = true; // pour eviter les doubles cliques
+            bouton.disabled = true; // pour eviter les doubles clic
 
-            const idOeuvre = bouton.dataset.id;
+            const workId = bouton.dataset.id;
 
-            const suppressionOk = await deletOeuvre(idOeuvre);
+            const deleteIsOk = await deleteWork(workId);
 
-            if (suppressionOk) {
-                const figureASupprimer = e.target.closest("figure");
-                figureASupprimer.remove();
-                await galleryModal();
-                await chargerOeuvres();
+            if (deleteIsOk) {
+                const figureToDelete = e.target.closest("figure");
+                figureToDelete.remove();
+                await loadModalGallery();
+                await loadWorks();
             }
             else {
                 bouton.disabled = false; // si echec permet de reéssayer de supprimer
             }
         })
 
-        sectionGallery.appendChild(oeuvreElement);
-        oeuvreElement.appendChild(imageOeuvre);
-        oeuvreElement.appendChild(boutonSupprimer);
+        sectionGallery.appendChild(workElement);
+        workElement.appendChild(imageWork);
+        workElement.appendChild(deleteButton);
 
     });
 }
 
 /********* fonction passage formulaire / galerie  ************/
 
-function switchGalerieFormulaire() {
-    const boutonAjoutPhoto = document.querySelector(".ajout-photo");
-    const galerie = document.querySelector(".modal-galerie");
-    const formulaire = document.querySelector(".modal-formulaire");
+function toggleModalView() {
+    const addWorkButton = document.querySelector(".add-photo");
+    const gallery = document.querySelector(".modal-gallery");
+    const form = document.querySelector(".modal-form");
 
-    if (!boutonAjoutPhoto.dataset.listener) {       // verifier si j'ai aps deja un listener
-        boutonAjoutPhoto.addEventListener("click", () => {
-            galerie.style.display = "none";
-            formulaire.style.display = "flex";
+    if (!addWorkButton.dataset.listener) {       // verifier si j'ai aps deja un listener
+        addWorkButton.addEventListener("click", () => {
+            gallery.style.display = "none";
+            form.style.display = "flex";
         });
-        boutonAjoutPhoto.dataset.listener = "true"; // indiquer la presence du listener
+        addWorkButton.dataset.listener = "true"; // indiquer la presence du listener
     }
 
-    const boutonRetour = document.querySelector(".js-return-modal");
-    if (boutonRetour && !boutonRetour.dataset.listener) {  // verifie la presence du bouton retour et si il y a un listener
-        boutonRetour.addEventListener("click", (e) => {
+    const returnButton = document.querySelector(".js-return-modal");
+    if (returnButton && !returnButton.dataset.listener) {  // verifie la presence du bouton retour et si il y a un listener
+        returnButton.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            formulaire.style.display = "none";
-            galerie.style.display = "flex";
+            form.style.display = "none";
+            gallery.style.display = "flex";
         });
-        boutonRetour.dataset.listener = "true"; // indique le listener
+        returnButton.dataset.listener = "true"; // indique le listener
     }
 }
 
 /********* fonction ecoute du formulaire d'envoie  ************/
 
-function setupFormListener() {
+function initializeAddWorkForm() {
     const icon = modal.querySelector(".upload-container .fa-image");
     const validTypes = ["image/jpeg", "image/png"];
-    const form = document.getElementById("form-ajout-oeuvre");
+    const form = document.getElementById("form-add-works");
     if (!form || form.dataset.listener === "true") return; // pour etre sur d'avoir le formulaire et verifier si il y a deja un listener
 
     form.dataset.listener = "true";
@@ -173,9 +175,12 @@ function setupFormListener() {
         const title = titleInput.value.trim();   // Trim pour éviter espaces vides
         const category = categorySelect.value;
         const imageFile = imageInput.files[0];
+        const chevronRegex = /[<>]/;  // pour empecher de mettre des chevron dans le titre
+
+        const isTitleValid = title && !chevronRegex.test(title);
 
         // Si TOUT est rempli, bouton activé, sinon désactivé
-        submitButton.disabled = !(title && category && imageFile);
+        submitButton.disabled = !(isTitleValid && category && imageFile);
     }
 
     // on vérifie la validité du formulaire a chaque modification
@@ -263,12 +268,12 @@ function setupFormListener() {
         const formData = new FormData(form);
 
         try {
-            const result = await postOeuvre(formData);
+            await uploadWork(formData);
             form.reset(); //reset du formulaire apres réussite
             resetFormAndPreview(modal);
             alert("ajout de l'oeuvre avec succès !")
-            await galleryModal();
-            await chargerOeuvres();
+            await loadModalGallery();
+            await loadWorks();
             checkFormValidity();
         }
         catch (error) {
@@ -281,8 +286,8 @@ function setupFormListener() {
 
 async function loadCategories() {
     try {
-        const reponse = await fetch("http://localhost:5678/api/categories");
-        const categories = await reponse.json();
+        const response = await fetch("http://localhost:5678/api/categories");
+        const categories = await response.json();
 
         const select = document.getElementById("category");
         select.innerHTML = ''; // pour bien vider le select avant d'ajouter des options
@@ -291,10 +296,10 @@ async function loadCategories() {
         optionDefault.value = "";
         select.appendChild(optionDefault);
 
-        categories.forEach(categorie => {
+        categories.forEach(category => {
             const option = document.createElement("option");
-            option.value = categorie.id;
-            option.textContent = categorie.name;
+            option.value = category.id;
+            option.textContent = category.name;
             select.appendChild(option);
         });
     }
@@ -305,7 +310,7 @@ async function loadCategories() {
 
 /********* fonction d'envoie du formulaire  ************/
 
-async function postOeuvre(data) {
+async function uploadWork(data) {
     const token = localStorage.getItem("tokenUser");
 
     const response = await fetch("http://localhost:5678/api/works", {
@@ -325,24 +330,22 @@ async function postOeuvre(data) {
 
 /********* fonction pour supprimer les oeuvres ************/
 
-async function deletOeuvre(dataID) {
+async function deleteWork(dataID) {
     try {
         const token = localStorage.getItem("tokenUser");
 
-        const reponse = await fetch(`http://localhost:5678/api/works/${dataID}`, {
+        const response = await fetch(`http://localhost:5678/api/works/${dataID}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,
             },
         });
 
-        if (reponse.ok) {
-            return true;
-        }
-        else {
+        if (!response.ok) {
             alert("Echec de la suppression.");
             return false;
         }
+        return true;
     }
 
     catch (error) {
@@ -353,7 +356,7 @@ async function deletOeuvre(dataID) {
 
 /********* fonction reset form et preview  ************/
 function resetFormAndPreview(modal) {
-    const form = modal.querySelector("#form-ajout-oeuvre");
+    const form = modal.querySelector("#form-add-works");
     const previewImage = modal.querySelector("#image-preview");
     const icon = modal.querySelector(".upload-container .fa-image");
     const label = modal.querySelector(".upload-label");
@@ -362,8 +365,8 @@ function resetFormAndPreview(modal) {
     if (form) form.reset();
     if (previewImage) previewImage.style.display = "none";
     if (icon) icon.classList.remove("hidden");
-    if (label) label.style.display = "flex";   
-    if (p) p.style.display = "block";           
+    if (label) label.style.display = "flex";
+    if (p) p.style.display = "block";
 }
 
 /********* ecoute du click sur la modale  ************/

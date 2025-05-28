@@ -1,84 +1,82 @@
-export async function chargerOeuvres() {
-    const reponse = await fetch("http://localhost:5678/api/works");
-    const oeuvres = await reponse.json();
+export async function loadWorks() {
+    const response = await fetch("http://localhost:5678/api/works");  //récupération des oeuvres
+    const works = await response.json();
 
 
     const sectionGallery = document.querySelector(".gallery");
     sectionGallery.innerHTML = '';  // Vide la galerie
 
-    const sectionFiltre = document.querySelector(".filtres");
-    sectionFiltre.innerHTML = '';  // Vide les boutons filtres
+    const sectionFilters = document.querySelector(".filters");
+    sectionFilters.innerHTML = '';  // Vide les boutons filtres
 
     /***Je creer le bouton pour afficher toutes les oeuvres */
-    const boutonTous = document.createElement("button");
-    boutonTous.innerText = "Tous";
-    boutonTous.setAttribute("id", "boutonTous");
+    const buttonTous = document.createElement("button");
+    buttonTous.innerText = "Tous";
+    buttonTous.setAttribute("id", "buttonTous");
 
-    sectionFiltre.appendChild(boutonTous);
+    sectionFilters.appendChild(buttonTous);
 
     /*** ajout de l'evenement click */
 
-    boutonTous.addEventListener("click", () => {
-        filtrerOeuvres("Tous");
+    buttonTous.addEventListener("click", () => {
+        filterWorks("Tous");
     })
 
     /*** Je récupère les catégories des oeuvre et fait une liste sans doublons */
-    const categoriesUnique = [...new Set(oeuvres.map(oeuvre => JSON.stringify(oeuvre.category)))].map(cat => JSON.parse(cat));
+    const uniqueCategories  = [...new Set(works.map(work => JSON.stringify(work.category)))].map(cat => JSON.parse(cat));
 
     /*** je fait une boucle pour créer mes boutons de categories */
-    categoriesUnique.forEach(categori => {
-        console.log(categori);
+    uniqueCategories .forEach(category => {
+        /*console.log(category); (verification du fonctionnement*/
 
-        const boutonsFiltre = document.createElement("button");
-        boutonsFiltre.innerText = categori.name;
-        boutonsFiltre.setAttribute("data-category-id", categori.id);
+        const filterButton = document.createElement("button");
+        filterButton.innerText = category.name;
+        filterButton.setAttribute("data-category-id", category.id);
 
-        sectionFiltre.appendChild(boutonsFiltre);
+        sectionFilters.appendChild(filterButton);
 
-        boutonsFiltre.addEventListener("click", (event) => {
-            console.log(event.target);
+        /*** ajout de l'evenement de click pour filtrer les categories */
+        filterButton.addEventListener("click", (event) => {
+            /*console.log(event.target);(verification du fonctionnement*/
 
-            const categoriIdCliquee = event.target.getAttribute("data-category-id");
-            filtrerOeuvres(categoriIdCliquee);
-
+            const categoryIdClicked = event.target.getAttribute("data-category-id");
+            filterWorks(categoryIdClicked);
         });
 
     });
 
-    oeuvres.forEach(oeuvre => {
-        console.log(oeuvre.title);
+    works.forEach(work => {
+        console.log(work.title);
 
-        /*** j'indique l'endroit dans le html */
-        const sectionGallery = document.querySelector(".gallery");
         /*** j'indique le type de balise de mon element */
-        const oeuvreElement = document.createElement("figure");
+        const workElement = document.createElement("figure");
 
         /*** je créer une balise pour mon element et je récupère les informations de mon élément */
-        const imageOeuvre = document.createElement("img");
-        imageOeuvre.src = oeuvre.imageUrl;
-        imageOeuvre.alt = oeuvre.title;
-        const titreOeuvre = document.createElement("figcaption");
-        titreOeuvre.innerText = oeuvre.title;
+        const imageWork = document.createElement("img");
+        imageWork.src = work.imageUrl;
+        imageWork.alt = work.title;
+        const titleWork = document.createElement("figcaption");
+        titleWork.innerText = work.title;
 
-        oeuvreElement.classList.add("category-" + oeuvre.category.id);
+        workElement.classList.add("category-" + work.category.id);
 
-        sectionGallery.appendChild(oeuvreElement);
+        sectionGallery.appendChild(workElement);
 
-        oeuvreElement.appendChild(imageOeuvre);
-        oeuvreElement.appendChild(titreOeuvre);
+        workElement.appendChild(imageWork);
+        workElement.appendChild(titleWork);
     });
 
     /**** fonction pour trier les oeuvres */
-    function filtrerOeuvres(categoryId) {
-        const oeuvresElements = document.querySelectorAll(".gallery figure");
+    function filterWorks(categoryId) {
+        const worksElements = document.querySelectorAll(".gallery figure");
 
-        oeuvresElements.forEach(oeuvre => {
-            if (categoryId === "Tous" || oeuvre.classList.contains("category-" + categoryId)) {
-                console.log("affichage", oeuvre);
-                oeuvre.classList.remove("hidden");
+        worksElements.forEach(work => {
+            if (categoryId === "Tous" || work.classList.contains("category-" + categoryId)) {
+                /*console.log("affichage", work); (verification du fonctionnement)*/
+                work.classList.remove("hidden");
             } else {
-                console.log("masquage", oeuvre);
-                oeuvre.classList.add("hidden");
+                /*console.log("masquage", work);(verification du fonctionnement)*/
+                work.classList.add("hidden");
             }
         });
     }
@@ -91,8 +89,8 @@ function logout() {
     window.location.reload();
 }
 
-/*** fonction d'ecoute pour savoir si j'ai login ou logout */
-function ecouteToken() {
+/*** fonction d'ecoute pour savoir si j'ai un jeton de connexion */
+function checkToken() {
     const token = localStorage.getItem("tokenUser");
     const loginLink = document.querySelector("#login-link");
     if (token) {
@@ -106,7 +104,8 @@ function ecouteToken() {
     }
 
 }
+/*** je vérifie la présence d'un jeton */
+checkToken();
 
-ecouteToken();
-/*** Je charges mes éléments dynamiques sur ma page html */
-chargerOeuvres();
+/*** Je charge mes éléments dynamiques sur ma page html */
+loadWorks();

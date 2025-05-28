@@ -302,14 +302,14 @@ footer nav ul {
 
 /*** Filters buttons *****/
 
-.filtres {
+.filters {
 	display: flex;
 	justify-content: center;
 	gap: 10px;
 	margin: 50px;
 }
 
-.filtres button {
+.filters button {
 	border: solid 1px #1D6154;
 	font-size: 16px;
 	font-family: 'Syne';
@@ -320,7 +320,7 @@ footer nav ul {
 	padding: 0 15px;
 }
 
-.filtres button:hover {
+.filters button:hover {
 	background-color: #1D6154;
 	color: white;
 }
@@ -427,7 +427,7 @@ nav a.active {
 
 /*** Modale***/
 
-#titre-modale {
+#modal-title {
 	display: flex;
 	justify-content: space-evenly;
 	width: 30%;
@@ -435,7 +435,7 @@ nav a.active {
 	padding-left: 60px;
 }
 
-#icone-modale {
+#modal-icon {
 	display: flex;
 	margin-top: 10px;
 	gap: 10px;
@@ -472,7 +472,7 @@ nav a.active {
 	z-index: 1001;
 }
 
-.modal-galerie {
+.modal-gallery {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -536,7 +536,7 @@ nav a.active {
 	border: solid 1px #B3B3B3;
 }
 
-.ajout-photo {
+.add-photo {
 	margin-top: 10px;
 	border: none;
 	border-radius: 60px;
@@ -556,7 +556,7 @@ figure {
 	position: relative;
 }
 
-.btn-supprimer {
+.btn-delete {
 	position: absolute;
 	top: 5px;
 	right: 5px;
@@ -570,12 +570,12 @@ figure {
 	background-color: #000000;
 }
 
-.modal-formulaire {
+.modal-form {
 	display: none;
 }
 
 /*** deuxieme vue - formulaire ***/
-.modal-formulaire {
+.modal-form {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -584,13 +584,13 @@ figure {
 	border-radius: 10px;
 }
 
-#form-ajout-oeuvre {
+#form-add-works {
 	width: 100%;
 	height: 100%;
 	border-radius: 10px;
 }
 
-.entete-ajout-photo {
+.heading-add-photo {
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-end;
@@ -603,12 +603,12 @@ figure {
 	background-color: #FFF;
 }
 
-.icone {
+.icon {
 	margin-left: 20px;
 	font-size: large;
 }
 
-#form-ajout-oeuvre h3 {
+#form-add-works h3 {
 	display: flex;
 	justify-content: center;
 }
@@ -668,7 +668,7 @@ figure {
 	font-size: 10px;
 }
 
-.form-titre-categorie {
+.form-title-category {
 	width: 66%;
 }
 
@@ -680,7 +680,7 @@ figure {
 	font-size: large;
 }
 
-.bouton-valider {
+.button-check {
 	display: block;
 	margin: 10px auto;
 	border: none;
@@ -693,7 +693,7 @@ figure {
 	font-size: 14px;
 }
 
-.form-titre-categorie input, select {
+.form-title-category input, select {
 	padding-left: 15px;
 	color: #444444;
 }
