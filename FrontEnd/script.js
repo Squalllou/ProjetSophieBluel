@@ -46,7 +46,7 @@ export async function loadWorks() {
     });
 
     works.forEach(work => {
-        console.log(work.title);
+        /*console.log(work.title);*/ // pour vérification dans la console de ce que l'on récupère
 
         /*** j'indique le type de balise de mon element */
         const workElement = document.createElement("figure");

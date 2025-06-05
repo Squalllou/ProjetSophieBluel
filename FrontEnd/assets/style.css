@@ -563,6 +563,10 @@ figure {
 	border: none;
 	background-color: #000000;
 	border-radius: 2px;
+	width: 17px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .fa-trash-can {

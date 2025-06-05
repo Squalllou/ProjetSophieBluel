@@ -36,14 +36,14 @@ const closeModal = function (e) {
         return;
     }
     e.preventDefault();
-
+    /*** pour remettre par defaut la gallery quand on ferme la modale */
     const gallery = modal.querySelector(".modal-gallery");
     const formModal = modal.querySelector(".modal-form");
     if (gallery && formModal) {
         gallery.style.display = "flex";
         formModal.style.display = "none";
     }
-
+    /***a l'inverse d'afficher la modal ce que l'on masque dans le DOM */
     modal.style.display = "none";
     modal.setAttribute("aria-hidden", "true");
     modal.removeAttribute("aria-modal");
@@ -134,7 +134,7 @@ function toggleModalView() {
     const gallery = document.querySelector(".modal-gallery");
     const form = document.querySelector(".modal-form");
 
-    if (!addWorkButton.dataset.listener) {       // verifier si j'ai aps deja un listener
+    if (!addWorkButton.dataset.listener) {       // verifier si j'ai pas deja un listener
         addWorkButton.addEventListener("click", () => {
             gallery.style.display = "none";
             form.style.display = "flex";
@@ -198,7 +198,7 @@ function initializeAddWorkForm() {
         }
 
         if (!validTypes.includes(file.type)) {
-            alert("Format d'umage non suporté.(jpg ou png)");
+            alert("Format d'image non suporté.(jpg ou png)");
             imageInput.value = "";
             previewImage.style.display = "none";
             icon.classList.remove("hidden");
@@ -374,3 +374,11 @@ document.querySelectorAll(".js-modal").forEach(a => {
     a.addEventListener('click', openModal);
 })
 
+
+/********* masquer le bouton de la modal si pas d'utilisateur connecté  ************/
+const token = localStorage.getItem("tokenUser");
+if (!token) {
+    document.querySelectorAll(".js-modal").forEach(a => {
+        a.style.display = "none";
+    });
+}
